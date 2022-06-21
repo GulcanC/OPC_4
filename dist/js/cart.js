@@ -9,7 +9,7 @@ console.log(productLocalStorage);
 if (productLocalStorage) {
   productLocalStorage.forEach(function (product, index) {
 
-    fetch(`${apiUrl}api/products/${product.productId}`)
+    fetch(`http://localhost:3000/api/products/${product.productId}`)
       .then(function (response) {
         if (response.ok) {
           return response.json();
@@ -404,7 +404,7 @@ formButton.addEventListener('click', event => {
       },
     };
 
-    fetch(`${apiUrl}api/products/order`, postForm)
+    fetch("http://localhost:3000/api/products/order", postForm)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
