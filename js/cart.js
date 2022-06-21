@@ -2,6 +2,10 @@
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 console.log(productLocalStorage);
 
+
+
+
+
 if (productLocalStorage) {
   productLocalStorage.forEach(function (product, index) {
 
@@ -106,7 +110,7 @@ if (productLocalStorage) {
 
           // message after deleted item and refresh the page
 
-          alert("⚠️ The selected product will be deleted from your cart!");
+          alert("⚠️ The selected product was deleted from your cart!");
 
           window.location.reload();
 
@@ -114,14 +118,14 @@ if (productLocalStorage) {
 
         // FUNCTION CHANGE QUANTITY
 
-        function changeQuantity() {
+        function changeProductQuantity() {
 
           // See each click input
 
           // let changeQuantity = document.getElementsByClassName("itemQuantity");
-
           let changeQuantity = document.querySelectorAll(".itemQuantity");
           console.log(changeQuantity);
+
 
           for (let i = 0; i < changeQuantity.length; i++) {
             changeQuantity[i].addEventListener("change", (event) => {
@@ -145,23 +149,24 @@ if (productLocalStorage) {
           }
         }
 
-        changeQuantity();
+        changeProductQuantity();
 
         // FUNCTION TOTAL PRICE
 
         function totalPrice() {
+          changeQuantity = document.querySelectorAll(".itemQuantity");
 
           // Determine total quantity
 
-          let productsQuantities = document.querySelectorAll('.itemQuantity');
-          // let productsQuantities = document.getElementsByClassName('itemQuantity');
-          console.log(productsQuantities)
-          let myCart = productsQuantities.length,
+          // let changeQuantity = document.getElementsByClassName('itemQuantity');
+     
+
+          let myCart = changeQuantity.length,
             totalQuantity = 0;
           console.log(myCart);
 
           for (var i = 0; i < myCart; ++i) {
-            totalQuantity += productsQuantities[i].valueAsNumber;
+            totalQuantity += changeQuantity[i].valueAsNumber;
           }
 
           let productTotalQuantity = document.getElementById('totalQuantity');
@@ -171,7 +176,7 @@ if (productLocalStorage) {
           displayTotalPrice = 0;
 
           for (var i = 0; i < myCart; ++i) {
-            displayTotalPrice += (productsQuantities[i].valueAsNumber * products.price);
+            displayTotalPrice += (changeQuantity[i].valueAsNumber * products.price);
           }
 
           let showTotalPrice = document.getElementById("totalPrice");
@@ -354,10 +359,10 @@ formButton.addEventListener('click', event => {
     address.value.length == 0 ||
     city.value.length == 0 ||
     email.value.length == 0) {
-    alert("⚠️ Please fill the form!");
+    window.alert("⚠️ Please fill the form!");
 
   } else if (regExEmail.test(email.value) == false || regExAddress.test(address.value) == false || regExText.test(city.value) == false || regExText.test(firstName.value) == false || regExText.test(lastName.value) == false) {
-    alert("⚠️ Please provide valid values on the form!");
+    window.alert("⚠️ Please provide valid values on the form!");
 
   }
   else if (productLocalStorage == null || productLocalStorage == 0) {
@@ -390,7 +395,7 @@ formButton.addEventListener('click', event => {
     }
     console.log(order);
 
-    const options = {
+    const postForm = {
       method: 'POST',
       body: JSON.stringify(order),
       headers: {
@@ -399,7 +404,7 @@ formButton.addEventListener('click', event => {
       },
     };
 
-    fetch(`${apiUrl}api/products/order`, options)
+    fetch(`${apiUrl}api/products/order`, postForm)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -411,7 +416,7 @@ formButton.addEventListener('click', event => {
         location.href = `confirmation.html?id=${data.orderId}`
       })
       .catch((err) => {
-        alert("Problème avec fetch : " + err.message);
+        alert("Post error!");
       });
   }
 });
