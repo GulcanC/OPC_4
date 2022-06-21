@@ -1,9 +1,5 @@
-
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 console.log(productLocalStorage);
-
-
-
 
 
 if (productLocalStorage) {
@@ -110,7 +106,7 @@ if (productLocalStorage) {
 
           // message after deleted item and refresh the page
 
-          alert("⚠️ The selected product was deleted from your cart!");
+          alert("⚠️ The selected product will be deleted from your cart!");
 
           window.location.reload();
 
@@ -420,6 +416,11 @@ formButton.addEventListener('click', event => {
       });
   }
 });
+
+
+
+
+
 
 
 
