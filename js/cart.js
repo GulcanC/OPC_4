@@ -1,5 +1,10 @@
+
+
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 console.log(productLocalStorage);
+
+
+
 
 
 if (productLocalStorage) {
@@ -96,6 +101,8 @@ if (productLocalStorage) {
 
         pDelete.addEventListener('click', function () {
 
+          // remove 1 element at index i
+
           productLocalStorage.splice(index, 1);
 
           // send the new data to the localStorage
@@ -106,7 +113,7 @@ if (productLocalStorage) {
 
           // message after deleted item and refresh the page
 
-          alert("⚠️ The selected product will be deleted from your cart!");
+          alert("⚠️ The selected product was deleted from your cart!");
 
           window.location.reload();
 
@@ -116,12 +123,8 @@ if (productLocalStorage) {
 
         function changeProductQuantity() {
 
-          // See each click input
-
-          // let changeQuantity = document.getElementsByClassName("itemQuantity");
           let changeQuantity = document.querySelectorAll(".itemQuantity");
           console.log(changeQuantity);
-
 
           for (let i = 0; i < changeQuantity.length; i++) {
             changeQuantity[i].addEventListener("change", (event) => {
@@ -132,7 +135,7 @@ if (productLocalStorage) {
 
               // Choose un product according to its color and id 
 
-              var findProduct = productLocalStorage.find(el => el.productId == productLocalStorage[i].productId);
+              var findProduct = productLocalStorage.find(item => item.productId == productLocalStorage[i].productId && item.productColor == productLocalStorage[i].productColor );
 
               findProduct.productQuantity = changeQuantity[i].valueAsNumber;
 
@@ -416,6 +419,21 @@ formButton.addEventListener('click', event => {
       });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
