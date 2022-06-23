@@ -13,7 +13,7 @@ let product = "";
 
 // Find Full URL of the Product
 
-let urlProduct = `${apiUrl}api/products/${productId}`;
+let urlProduct = `http://localhost:3000/api/products/${productId}`;
 
 console.log(urlProduct);
 
@@ -109,17 +109,19 @@ function addProductToCart(product) {
         let productLocalStorage = JSON.parse(localStorage.getItem("product"));
         console.log(productLocalStorage); // At first it is "null" 
 
-        if((quantity.value == 0 || quantity.value == null) && (color.value == 0 || color.value == null) ){
+        if ((quantity.value == 0 || quantity.value == null) && (color.value == 0 || color.value == null)) {
             alert('⚠️ Please choose the quantity and a color!')
         }
-        else if(color.value == 0 || color.value == null) {
+        else if (color.value == 0 || color.value == null) {
             alert('⚠️ Please choose a color!')
         }
-        else if(quantity.value == 0 || quantity.value == null) {
-            alert('⚠️ Please choose the quantity!')
+        else if (quantity.value == 0 || quantity.value == null) {
+            alert('⚠️ Please choose the quantity greater than 0!')
         }
-
-        else if  (quantity.value > 0 && quantity.value <= 100) {
+        else if (quantity.value <= -1) {
+            alert('⚠️ You can not choose a negative value!')
+        }
+        else if (quantity.value > 0 && quantity.value <= 100) {
 
             const massageCofirmation = () => {
 
