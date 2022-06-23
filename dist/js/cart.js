@@ -1,16 +1,11 @@
 
-
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 console.log(productLocalStorage);
-
-
-
-
 
 if (productLocalStorage) {
   productLocalStorage.forEach(function (product, index) {
 
-    fetch(`${apiUrl}api/products/${product.productId}`)
+    fetch(`http://localhost:3000/api/products/${product.productId}`)
       .then(function (response) {
         if (response.ok) {
           return response.json();
@@ -113,7 +108,7 @@ if (productLocalStorage) {
 
           // message after deleted item and refresh the page
 
-          alert("⚠️ The selected product was deleted from your cart!");
+          alert("⚠️ The selected product will be deleted from your cart!");
 
           window.location.reload();
 
@@ -121,33 +116,38 @@ if (productLocalStorage) {
 
         // FUNCTION CHANGE QUANTITY
 
+
         function changeProductQuantity() {
 
           let changeQuantity = document.querySelectorAll(".itemQuantity");
           console.log(changeQuantity);
 
           for (let i = 0; i < changeQuantity.length; i++) {
+
             changeQuantity[i].addEventListener("change", (event) => {
 
               // event.preventDefault();
 
               event.stopPropagation();
 
-              // Choose un product according to its color and id 
+              let updatedQuantity = changeQuantity[i].value;
 
-              var findProduct = productLocalStorage.find(item => item.productId == productLocalStorage[i].productId && item.productColor == productLocalStorage[i].productColor );
-
-              findProduct.productQuantity = changeQuantity[i].valueAsNumber;
-
-              productLocalStorage[i].productQuantity = findProduct.productQuantity;
-
-              localStorage.setItem("product", JSON.stringify(productLocalStorage));
-
+              if(updatedQuantity <= 0){
+                alert('⚠️ You can not enter 0 and negatif values!');
+                changeQuantity[i].value = productLocalStorage[i].productQuantity;
+              }
+              else if(updatedQuantity > 100) {
+                alert('⚠️ Please a number which is smaller than 100!')
+              }
+              else if(updatedQuantity >= 1 && updatedQuantity <= 100){
+                productLocalStorage[i].productQuantity = changeQuantity[i].value;
+                localStorage.setItem('product', JSON.stringify(productLocalStorage));
+                totalPrice();
+              }
               window.location.reload();
             })
           }
         }
-
         changeProductQuantity();
 
         // FUNCTION TOTAL PRICE
@@ -158,8 +158,6 @@ if (productLocalStorage) {
           // Determine total quantity
 
           // let changeQuantity = document.getElementsByClassName('itemQuantity');
-     
-
           let myCart = changeQuantity.length,
             totalQuantity = 0;
           console.log(myCart);
@@ -183,16 +181,12 @@ if (productLocalStorage) {
         }
         totalPrice();
       });
-
   });
-
 }
 
 // FORM
 
 let formSubmitButton = document.querySelector('.cart__order__form');
-
-
 
 // Validate FirstName
 
@@ -205,7 +199,6 @@ function validateFirstName() {
   // Create regEx to test input for 3-10 allowed characters, special characters are not allowed
 
   let regExText = /^[a-zA-Z\s\'\-]{3,10}$/;
-
 
   if (regExText.test(firstName)) {//if input is valid, update page to show succesful entry
     document.getElementById("firstNameErrorMsg").innerText = "✅ Name is valid!";
@@ -319,7 +312,6 @@ console.log(formButton);
 
 formButton.addEventListener('click', event => {
   event.preventDefault();
-
   const formValues = {
     firstName: document.getElementById('firstName').value,
     lastName: document.getElementById('lastName').value,
@@ -358,10 +350,10 @@ formButton.addEventListener('click', event => {
     address.value.length == 0 ||
     city.value.length == 0 ||
     email.value.length == 0) {
-    window.alert("⚠️ Please fill the form!");
+    alert("⚠️ Please fill the form!");
 
   } else if (regExEmail.test(email.value) == false || regExAddress.test(address.value) == false || regExText.test(city.value) == false || regExText.test(firstName.value) == false || regExText.test(lastName.value) == false) {
-    window.alert("⚠️ Please provide valid values on the form!");
+    alert("⚠️ Please provide valid values on the form!");
 
   }
   else if (productLocalStorage == null || productLocalStorage == 0) {
@@ -403,7 +395,7 @@ formButton.addEventListener('click', event => {
       },
     };
 
-    fetch(`${apiUrl}api/products/order`, postForm)
+    fetch("http://localhost:3000/api/products/order", postForm)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -419,26 +411,6 @@ formButton.addEventListener('click', event => {
       });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
