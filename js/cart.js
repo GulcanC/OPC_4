@@ -20,7 +20,7 @@ if (productLocalStorage) {
         article.setAttribute('data-id', product.productId);
         article.setAttribute('class', 'cart__item');
         document.getElementById("cart__items").appendChild(article);
-        // You can use this instead of "setAttribute" =>  article.className = "cart__item"; 
+        // You can use this method instead of "setAttribute" =>  article.className = "cart__item"; 
 
         // Create first "div" element for imageCreate inside "article"
         let imageDiv = document.createElement("div");
@@ -94,9 +94,11 @@ if (productLocalStorage) {
         pDelete.setAttribute('class', "deleteItem");
         pDelete.innerText = "Supprimer";
 
-        pDelete.addEventListener('click', function () {
+        // pDelete.addEventListener('click', function () {
 
-          // remove 1 element at index i
+        pDelete.addEventListener('click', () => {
+
+          // remove 1 element at index i, if you write 2 it will delete 2 elements, fonciton flech
 
           productLocalStorage.splice(index, 1);
 
@@ -114,70 +116,62 @@ if (productLocalStorage) {
 
         });
 
-        // FUNCTION CHANGE QUANTITY
+        // Modify quantity
 
+        productQuantity.addEventListener('change', function (event) {
+          event.stopPropagation();
 
-        function changeProductQuantity() {
+          console.log(typeof productQuantity.value);
+          console.log(typeof Number(productQuantity.value));
 
-          let changeQuantity = document.querySelectorAll(".itemQuantity");
-          console.log(changeQuantity);
+          let updatedQuantity = Number(productQuantity.value);
 
-          for (let i = 0; i < changeQuantity.length; i++) {
-
-            changeQuantity[i].addEventListener("change", (event) => {
-
-              // event.preventDefault();
-
-              event.stopPropagation();
-
-              let updatedQuantity = changeQuantity[i].value;
-
-              if(updatedQuantity <= 0){
-                alert('⚠️ You can not enter 0 and negatif values!');
-                changeQuantity[i].value = productLocalStorage[i].productQuantity;
-              }
-              else if(updatedQuantity > 100) {
-                alert('⚠️ Please a number which is smaller than 100!')
-              }
-              else if(updatedQuantity >= 1 && updatedQuantity <= 100){
-                productLocalStorage[i].productQuantity = changeQuantity[i].value;
-                localStorage.setItem('product', JSON.stringify(productLocalStorage));
-                totalPrice();
-              }
-              window.location.reload();
-            })
+          if (updatedQuantity <= 0) {
+            alert('⚠️ You can NOT enter 0 and negatif values!');
+            window.location.reload();
           }
-        }
-        changeProductQuantity();
+          else if (updatedQuantity > 100) {
+            alert('⚠️ You can NOT enter a value greater than 100!');
+            window.location.reload();
+          }
+          else if (updatedQuantity >= 1 && updatedQuantity <= 100) {
+            productLocalStorage[index].productQuantity = updatedQuantity;
+            localStorage.setItem('product', JSON.stringify(productLocalStorage));
+            totalPrice();
+          }
+          window.location.reload();
+
+        })
 
         // FUNCTION TOTAL PRICE
+        var changeQuantity = document.querySelectorAll(".itemQuantity");
 
         function totalPrice() {
-          changeQuantity = document.querySelectorAll(".itemQuantity");
 
-          // Determine total quantity
+          // Determine total quantity and total price
 
-          // let changeQuantity = document.getElementsByClassName('itemQuantity');
-          let myCart = changeQuantity.length,
-            totalQuantity = 0;
-          console.log(myCart);
+          let totalQuantity = 0;
+          let displayTotalPrice = 0;
 
-          for (var i = 0; i < myCart; ++i) {
-            totalQuantity += changeQuantity[i].valueAsNumber;
-          }
+          changeQuantity.forEach(element => {
+            totalQuantity += Number(changeQuantity[index].value);
+            displayTotalPrice += Number((changeQuantity[index].value * products.price));
+
+          });
 
           let productTotalQuantity = document.getElementById('totalQuantity');
           productTotalQuantity.innerText = totalQuantity;
 
-          // Calculate total price
-          displayTotalPrice = 0;
-
-          for (var i = 0; i < myCart; ++i) {
-            displayTotalPrice += (changeQuantity[i].valueAsNumber * products.price);
-          }
-
           let showTotalPrice = document.getElementById("totalPrice");
           showTotalPrice.innerText = displayTotalPrice;
+
+          /*  for (let i = 0; i < changeQuantity.length; ++i) {
+            totalQuantity += Number(changeQuantity[i].value);
+          } */
+
+          /*   for (let i = 0; i < changeQuantity.length; ++i) {
+           displayTotalPrice += Number((changeQuantity[i].value * products.price));
+         } */
         }
         totalPrice();
       });
@@ -185,20 +179,15 @@ if (productLocalStorage) {
 }
 
 // FORM
-
-let formSubmitButton = document.querySelector('.cart__order__form');
-
-// Validate FirstName
+var regExText = /^[a-zA-Z\s\'\-]{3,10}$/; // use regExText for three values; firstName, lastName and city
+var regExAddress = /^[0-9]{1,5}[" "]{1}[a-zA-z0-9/\\''(),-\s]{2,255}[" "]{1}[0-9]{5}$/;
+var regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
 
 function validateFirstName() {
 
   // Choose the input for firstName
-
+  // Create regEx to test input for 3-10 allowed characters, special characters are not allowed  regExText;
   let firstName = document.getElementById("firstName").value;
-
-  // Create regEx to test input for 3-10 allowed characters, special characters are not allowed
-
-  let regExText = /^[a-zA-Z\s\'\-]{3,10}$/;
 
   if (regExText.test(firstName)) {//if input is valid, update page to show succesful entry
     document.getElementById("firstNameErrorMsg").innerText = "✅ Name is valid!";
@@ -208,21 +197,11 @@ function validateFirstName() {
     document.getElementById("firstNameErrorMsg").innerText = "⚠️ Please enter a valid name using 3-10 characters";
     return false;
   }
-
 }
 
-formSubmitButton.firstName.addEventListener('change', function () {
-  validateFirstName();
-});
-
-// Validate lastName
-
 function validatelastName() {
+
   let lastName = document.getElementById("lastName").value;
-
-  // For lastName you can use the same regEx => regExText
-
-  regExText = /^[a-zA-Z\s\'\-]{3,10}$/;
 
   if (regExText.test(lastName)) {
     document.getElementById("lastNameErrorMsg").innerText = "✅ Last name is valid!";
@@ -232,44 +211,25 @@ function validatelastName() {
     document.getElementById("lastNameErrorMsg").innerText = "⚠️ Please enter a valid last name using 3-10 characters";
     return false;
   }
-
 }
-
-formSubmitButton.lastName.addEventListener('change', function () {
-  validatelastName();
-});
-
-// Validate address
 
 function validateAddress() {
 
   let address = document.getElementById("address").value;
-
-  // For address you can use the same regEx => regExText
-
-  let regExAddress = /^([a-zA-z0-9/\\''(),-\s]{2,255})$/;
 
   if (regExAddress.test(address)) {
     document.getElementById("addressErrorMsg").innerText = "✅ Address is valid!";
     return true;
   }
   else {
-    document.getElementById("addressErrorMsg").innerText = "⚠️ Please enter a valid address!";
+    document.getElementById("addressErrorMsg").innerText = "⚠️ Format E.g.: 01 xxxxxxxx 12345";
     return false;
   }
 }
 
-formSubmitButton.address.addEventListener('change', function () {
-  validateAddress();
-});
-
 function validateCity() {
 
   let city = document.getElementById("city").value;
-
-  // For address you can use the same regEx => regExText
-
-  regExText = /^[a-zA-Z\s\'\-]{3,10}$/;
 
   if (regExText.test(city)) {
     document.getElementById("cityErrorMsg").innerText = "✅ City name is valid!";
@@ -281,17 +241,9 @@ function validateCity() {
   }
 }
 
-formSubmitButton.city.addEventListener('change', function () {
-  validateCity();
-});
-
 function validateEmail() {
 
   let email = document.getElementById("email").value;
-
-  // For address you can use the same regEx => regExText
-
-  let regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
 
   if (regExEmail.test(email)) {
     document.getElementById("emailErrorMsg").innerText = "✅ Email address is valid!";
@@ -302,8 +254,14 @@ function validateEmail() {
   }
 }
 
-formSubmitButton.email.addEventListener('change', function () {
-  validateEmail();
+var formSubmitButton = document.querySelector('.cart__order__form');
+
+formSubmitButton.addEventListener('change', function () {
+  validateFirstName(firstName);
+  validatelastName(lastName);
+  validateAddress(address);
+  validateCity(city);
+  validateEmail(email);
 });
 
 
@@ -312,38 +270,17 @@ console.log(formButton);
 
 formButton.addEventListener('click', event => {
   event.preventDefault();
-  const formValues = {
+
+  // put the form values in an object
+  // put the values of the form and the selected products in an object to send to the server
+
+  var contact = {
     firstName: document.getElementById('firstName').value,
     lastName: document.getElementById('lastName').value,
     address: document.getElementById('address').value,
     city: document.getElementById('city').value,
     email: document.getElementById('email').value,
   }
-  console.log(formValues);
-
-  localStorage.setItem('formValues', JSON.stringify(formValues));
-
-  // put the form values in an object
-  // put the values of the form and the selected products in an object to send to the server
-
-  const send = {
-    productLocalStorage,
-    formValues
-  }
-
-  console.log(send);
-
-  // Form values are strings, we have to convert string to an oject by using JSON.parse()
-
-  const dataLocalStorage = localStorage.getItem('formValues');
-  console.log(dataLocalStorage);
-
-  const dataLocalStorageObject = JSON.parse(dataLocalStorage);
-  console.log(dataLocalStorageObject);
-
-  regExText = /^[a-zA-Z\s\'\-]{3,10}$/;
-  regExAddress = /^([a-zA-z0-9/\\''(),-\s]{2,255})$/;
-  regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
 
   if (firstName.value.length == 0 ||
     lastName.value.length == 0 ||
@@ -361,58 +298,56 @@ formButton.addEventListener('click', event => {
   }
   else {
 
-    // getting values from the form to put them in the local storage
+    localStorage.setItem('contact', JSON.stringify(contact));
 
-    // Puttting the object "formValues" in the local storage
-    // This is an object, we have to send the values to the local storage as a string, so we must to convert object to a string by using JSON.stringfy()
+    let products = []; // see id of selected product
 
-    // put the contents of the local storage in the form field
-    //Construction d'un array depuis le local storage
-    let products = [];
-    for (let i = 0; i < productLocalStorage.length; i++) {
-      products.push(productLocalStorage[i].productId);
-    }
+    productLocalStorage.forEach(productSelected => {
+      products.push(productSelected.productId);
+
+    });
+
     console.log(products);
+    console.log(typeof products); // object
 
-    const order = {
-      contact: {
-        firstName,
-        lastName,
-        address,
-        city,
-        email,
-      },
-      products,
+    let userInfo = {
+      contact, // object type
+      products,  // object type
     }
-    console.log(order);
 
-    const postForm = {
+    console.log(userInfo);
+    console.log(typeof contact); // object
+
+    let urlOrder = "http://localhost:3000/api/products/order"
+
+    fetch(urlOrder, {
       method: 'POST',
-      body: JSON.stringify(order),
+      body: JSON.stringify(userInfo),
       headers: {
         'Accept': 'application/json',
         "Content-Type": "application/json"
       },
-    };
-
-    fetch("http://localhost:3000/api/products/order", postForm)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-
-        // document.location.href = "confirmation.html";
-
-        location.href = `confirmation.html?id=${data.orderId}`
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
       })
-      .catch((err) => {
-        alert("Post error!");
+      .then(function (info) {
+
+        console.log(info);
+
+        location.href = `confirmation.html?id=${info.orderId}`;
+
+        console.log(`confirmation.html?id=${info.orderId}`);
+
+      })
+      .catch(function (error) {
+        alert("⚠️ Post error!");
+
       });
+
   }
+
 });
-
-
-
-
 
