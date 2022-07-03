@@ -5,18 +5,23 @@
 // 3. Response object has a json method which is used to parse the response's body to a js object. Here jason method will give me an array that holds my products
 // 4. json method resturns also a promise, so use another then() to catch the array of products with the variable "products" that I  have as an argument
 
+var url = "http://localhost:3000/api/products";
+
 function displayAllProducts() {
-  fetch(`${apiUrl}api/products`)
+  fetch(url)
     .then(function (response) {
       if (response.ok) {
         return response.json();
       }
     })
     .then(function (products) {
+      console.log(products);
 
-// 5. Use forEach Method
+      // 5. Use forEach Method
 
       products.forEach(product => {
+
+        // products.forEach(function(product) {});
 
         console.log(product);
 
@@ -31,7 +36,7 @@ function displayAllProducts() {
 
         // You can also use this opportunity => productLink.href = `product.html?id=${product._id}`;
         // This is short way for setAttribute but use always "setAttribute" which is clear to understand the code
-       
+
         let article = document.createElement('article');
         productLink.appendChild(article);
 
@@ -54,10 +59,8 @@ function displayAllProducts() {
 
     })
     .catch(function (error) {
-     alert("Error")
+      alert("⚠️ Error! Fetch()!")
     });
 }
-
-
 displayAllProducts();
 
