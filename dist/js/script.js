@@ -5,10 +5,10 @@
 // 3. Response object has a json method which is used to parse the response's body to a js object. Here jason method will give me an array that holds my products
 // 4. json method resturns also a promise, so use another then() to catch the array of products with the variable "products" that I  have as an argument
 
-var url = "http://localhost:3000/api/products";
+// var url = "http://localhost:3000/api/products";
 
 function displayAllProducts() {
-  fetch(url)
+  fetch("https://gulcancprojectkanap.herokuapp.com/api/products")
     .then(function (response) {
       if (response.ok) {
         return response.json();
