@@ -9,7 +9,7 @@ let productId = urlParams.get("id");
 
 console.log(productId); // Find ID of the Product
 
-let urlProduct = `http://localhost:3000/api/products/${productId}`;
+let urlProduct = `https://gulcancprojectkanap.herokuapp.com/api/products/${productId}`;
 
 console.log(urlProduct); // Find full URL of the Product
 
