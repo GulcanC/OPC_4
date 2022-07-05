@@ -5,7 +5,7 @@ console.log(window.location); // See the properties of object "window.location"
 
 let urlParams = new URLSearchParams(queryString);
 
-let productId = urlParams.get("id"); 
+let productId = urlParams.get("id");
 
 console.log(productId); // Find ID of the Product
 
@@ -93,27 +93,27 @@ function addProductToCart(product) {
 
         if ((quantity.value == 0 || quantity.value == null) && (color.value == 0 || color.value == null)) {
             alert('⚠️ Please choose the quantity and a color!');
-              window.location.reload();
+            window.location.reload();
         }
         else if (color.value == 0 || color.value == null) {
             alert('⚠️ Please choose a color!');
-              window.location.reload();
+            window.location.reload();
         }
         else if (quantity.value == 0 || quantity.value == null) {
             alert('⚠️ Please choose the quantity enter 0 and 101!');
-              window.location.reload();
+            window.location.reload();
         }
         else if (quantity.value < 0) {
             alert('⚠️ You can NOT choose a negative value!');
-              window.location.reload();
+            window.location.reload();
         }
         else if (quantity.value > 100) {
             alert('⚠️ You can NOT choose a value greater than 100!');
-              window.location.reload();
+            window.location.reload();
         }
         else if (quantity.value > 0 && quantity.value <= 100) {
 
-            const messageAlert = function() {
+            const messageAlert = function () {
 
                 alert(`
                 ✅ The selected product was added to the cart! 
@@ -129,21 +129,38 @@ function addProductToCart(product) {
                 localStorage.setItem("product", JSON.stringify(productLocalStorage));
                 messageAlert();
                 location.assign("cart.html");
+            }
 
-            } else {
+            else {
                 const filterProduct = productLocalStorage.findIndex(
                     item => item.productId === productId && item.productColor === color.value);
 
                 console.log(filterProduct);
 
                 if (filterProduct >= 0) {
-                    let newQuantity = Number(productProperties.productQuantity) + Number(productLocalStorage[filterProduct].productQuantity);
-                    productLocalStorage[filterProduct].productQuantity = newQuantity;
-                    localStorage.setItem("product", JSON.stringify(productLocalStorage));
-                    messageAlert();
-                    location.assign("cart.html");
+                    newQuantity = Number(productProperties.productQuantity) + Number(productLocalStorage[filterProduct].productQuantity);
 
-                } else {
+
+                    if (productLocalStorage[filterProduct].productQuantity == 100) {
+                        alert(`✅ You already chosed "${productLocalStorage[filterProduct].productQuantity}" product for the product "${product.name}", thus you can NOT choose more product!`);
+                        window.location.reload();
+                    }
+
+                    else if ((productLocalStorage[filterProduct].productQuantity + productProperties.productQuantity) > 100) {
+                        alert(`✅ You have already added "${productLocalStorage[filterProduct].productQuantity}" products for the product "${product.name}", thus you can add maximum "${100 - productLocalStorage[filterProduct].productQuantity}" from the same product!`);
+                        window.location.reload();
+
+                    }
+
+                    else if (newQuantity <= 100) {
+                        productLocalStorage[filterProduct].productQuantity = newQuantity;
+                        localStorage.setItem("product", JSON.stringify(productLocalStorage));
+                        messageAlert();
+                        location.assign("cart.html");
+                    }
+                }
+
+                else {
                     productLocalStorage.push(productProperties);
                     localStorage.setItem("product", JSON.stringify(productLocalStorage));
                     messageAlert();
@@ -154,7 +171,6 @@ function addProductToCart(product) {
             alert('⚠️ Product is not shown on the product page!')
 
         }
-
     })
 }
 
