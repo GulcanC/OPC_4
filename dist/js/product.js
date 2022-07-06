@@ -142,7 +142,7 @@ function addProductToCart(product) {
 
 
                     if (productLocalStorage[filterProduct].productQuantity == 100) {
-                        alert(`⚠️ You already chosed "${productLocalStorage[filterProduct].productQuantity}" product for the product "${product.name}", thus you can NOT choose more product!`);
+                        alert(`⚠️ You have already added "${productLocalStorage[filterProduct].productQuantity}" product for the product "${product.name}", thus you can NOT add more product!`);
                         window.location.reload();
                     }
 
