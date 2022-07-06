@@ -142,12 +142,12 @@ function addProductToCart(product) {
 
 
                     if (productLocalStorage[filterProduct].productQuantity == 100) {
-                        alert(`✅ You already chosed "${productLocalStorage[filterProduct].productQuantity}" product for the product "${product.name}", thus you can NOT choose more product!`);
+                        alert(`⚠️ You already chosed "${productLocalStorage[filterProduct].productQuantity}" product for the product "${product.name}", thus you can NOT choose more product!`);
                         window.location.reload();
                     }
 
                     else if ((productLocalStorage[filterProduct].productQuantity + productProperties.productQuantity) > 100) {
-                        alert(`✅ You have already added "${productLocalStorage[filterProduct].productQuantity}" products for the product "${product.name}", thus you can add maximum "${100 - productLocalStorage[filterProduct].productQuantity}" from the same product!`);
+                        alert(`⚠️ You have already added "${productLocalStorage[filterProduct].productQuantity}" products for the product "${product.name}", thus you can add maximum "${100 - productLocalStorage[filterProduct].productQuantity}" from the same product!`);
                         window.location.reload();
 
                     }
