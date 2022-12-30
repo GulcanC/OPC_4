@@ -1,11 +1,9 @@
-
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 console.log(productLocalStorage);
 
 if (productLocalStorage) {
   productLocalStorage.forEach(function (product, index) {
-
-    fetch(`https://gulcancprojectkanap.herokuapp.com/api/products/${product.productId}`)
+    fetch(`https://p5-back.onrender.com/api/products/${product.productId}`)
       .then(function (response) {
         if (response.ok) {
           return response.json();
@@ -13,35 +11,34 @@ if (productLocalStorage) {
       })
 
       .then(function (products) {
-
         // Create "article" element
 
         let article = document.createElement("article");
-        article.setAttribute('data-id', product.productId);
-        article.setAttribute('class', 'cart__item');
+        article.setAttribute("data-id", product.productId);
+        article.setAttribute("class", "cart__item");
         document.getElementById("cart__items").appendChild(article);
-        // You can use this method instead of "setAttribute" =>  article.className = "cart__item"; 
+        // You can use this method instead of "setAttribute" =>  article.className = "cart__item";
 
         // Create first "div" element for imageCreate inside "article"
         let imageDiv = document.createElement("div");
         article.appendChild(imageDiv);
-        imageDiv.setAttribute('class', "cart__item__img");
+        imageDiv.setAttribute("class", "cart__item__img");
 
-        // Create "img" element 
+        // Create "img" element
         let image = document.createElement("img");
         imageDiv.appendChild(image);
-        image.setAttribute('src', products.imageUrl);
-        image.setAttribute('alt', products.altTxt);
+        image.setAttribute("src", products.imageUrl);
+        image.setAttribute("alt", products.altTxt);
 
         // Create second "div" element inside "article"
         let divItem = document.createElement("div");
         article.appendChild(divItem);
-        divItem.setAttribute('class', "cart__item__content");
+        divItem.setAttribute("class", "cart__item__content");
 
         // Create fisrt "div" element for h2, p, p inside "divitem"
         let divDescription = document.createElement("div");
         divItem.appendChild(divDescription);
-        divDescription.setAttribute('class', "cart__item__content__titlePrice");
+        divDescription.setAttribute("class", "cart__item__content__titlePrice");
 
         // Create h2 element for name of the product
         let title = document.createElement("h2");
@@ -61,12 +58,15 @@ if (productLocalStorage) {
         // Create second "div" element inside divItem
         let divSettings = document.createElement("div");
         divItem.appendChild(divSettings);
-        divSettings.setAttribute('class', "cart__item__content__settings");
+        divSettings.setAttribute("class", "cart__item__content__settings");
 
         // Create first "div" element inside divSettings
         let divQuantity = document.createElement("div");
         divSettings.appendChild(divQuantity);
-        divQuantity.setAttribute('class', "cart__item__content__settings__quantity");
+        divQuantity.setAttribute(
+          "class",
+          "cart__item__content__settings__quantity"
+        );
 
         // Create "p" element inside divQuantity
         let quantityEl = document.createElement("p");
@@ -86,18 +86,20 @@ if (productLocalStorage) {
         // Create second "div" element inside divSettings
         let divDelete = document.createElement("div");
         divSettings.appendChild(divDelete);
-        divDelete.setAttribute('class', "cart__item__content__settings__delete");
+        divDelete.setAttribute(
+          "class",
+          "cart__item__content__settings__delete"
+        );
 
         // Create second "p" element inside divDelete
         let pDelete = document.createElement("p");
         divDelete.appendChild(pDelete);
-        pDelete.setAttribute('class', "deleteItem");
+        pDelete.setAttribute("class", "deleteItem");
         pDelete.innerText = "Supprimer";
 
         // pDelete.addEventListener('click', function () {
 
-        pDelete.addEventListener('click', () => {
-
+        pDelete.addEventListener("click", () => {
           // remove 1 element at index i, if you write 2 it will delete 2 elements, fonciton flech
 
           productLocalStorage.splice(index, 1);
@@ -113,12 +115,11 @@ if (productLocalStorage) {
           alert("⚠️ The selected product will be deleted from your cart!");
 
           window.location.reload();
-
         });
 
         // Modify quantity
 
-        productQuantity.addEventListener('change', function (event) {
+        productQuantity.addEventListener("change", function (event) {
           event.stopPropagation();
 
           console.log(typeof productQuantity.value);
@@ -127,39 +128,39 @@ if (productLocalStorage) {
           let updatedQuantity = Number(productQuantity.value);
 
           if (updatedQuantity <= 0) {
-            alert('⚠️ You can NOT enter 0 and negatif values!');
+            alert("⚠️ You can NOT enter 0 and negatif values!");
             window.location.reload();
-          }
-          else if (updatedQuantity > 100) {
-            alert('⚠️ You can NOT enter a value greater than 100!');
+          } else if (updatedQuantity > 100) {
+            alert("⚠️ You can NOT enter a value greater than 100!");
             window.location.reload();
-          }
-          else if (updatedQuantity >= 1 && updatedQuantity <= 100) {
+          } else if (updatedQuantity >= 1 && updatedQuantity <= 100) {
             productLocalStorage[index].productQuantity = updatedQuantity;
-            localStorage.setItem('product', JSON.stringify(productLocalStorage));
+            localStorage.setItem(
+              "product",
+              JSON.stringify(productLocalStorage)
+            );
             totalPrice();
           }
           window.location.reload();
-
-        })
+        });
 
         // FUNCTION TOTAL PRICE
         var changeQuantity = document.querySelectorAll(".itemQuantity");
 
         function totalPrice() {
-
           // Determine total quantity and total price
 
           let totalQuantity = 0;
           let displayTotalPrice = 0;
 
-          changeQuantity.forEach(element => {
+          changeQuantity.forEach((element) => {
             totalQuantity += Number(changeQuantity[index].value);
-            displayTotalPrice += Number((changeQuantity[index].value * products.price));
-
+            displayTotalPrice += Number(
+              changeQuantity[index].value * products.price
+            );
           });
 
-          let productTotalQuantity = document.getElementById('totalQuantity');
+          let productTotalQuantity = document.getElementById("totalQuantity");
           productTotalQuantity.innerText = totalQuantity;
 
           let showTotalPrice = document.getElementById("totalPrice");
@@ -180,83 +181,87 @@ if (productLocalStorage) {
 
 // FORM
 var regExText = /^[a-zA-Z\s\'\-]{3,10}$/; // use regExText for three values; firstName, lastName and city
-var regExAddress = /^[0-9]{1,5}[" "]{1}[a-zA-z0-9/\\''(),-\s]{2,255}[" "]{1}[0-9]{5}$/;
+var regExAddress =
+  /^[0-9]{1,5}[" "]{1}[a-zA-z0-9/\\''(),-\s]{2,255}[" "]{1}[0-9]{5}$/;
 var regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
 
 function validateFirstName() {
-
   // Choose the input for firstName
   // Create regEx to test input for 3-10 allowed characters, special characters are not allowed  regExText;
   let firstName = document.getElementById("firstName").value;
 
-  if (regExText.test(firstName)) {//if input is valid, update page to show succesful entry
-    document.getElementById("firstNameErrorMsg").innerText = "✅ Name is valid!";
+  if (regExText.test(firstName)) {
+    //if input is valid, update page to show succesful entry
+    document.getElementById("firstNameErrorMsg").innerText =
+      "✅ Name is valid!";
     return true;
-  }
-  else {//if input is invalid, update page to prompt for new input
-    document.getElementById("firstNameErrorMsg").innerText = "⚠️ Please enter a valid name using 3-10 characters";
+  } else {
+    //if input is invalid, update page to prompt for new input
+    document.getElementById("firstNameErrorMsg").innerText =
+      "⚠️ Please enter a valid name using 3-10 characters";
     return false;
   }
 }
 
 function validatelastName() {
-
   let lastName = document.getElementById("lastName").value;
 
   if (regExText.test(lastName)) {
-    document.getElementById("lastNameErrorMsg").innerText = "✅ Last name is valid!";
+    document.getElementById("lastNameErrorMsg").innerText =
+      "✅ Last name is valid!";
     return true;
-  }
-  else {
-    document.getElementById("lastNameErrorMsg").innerText = "⚠️ Please enter a valid last name using 3-10 characters";
+  } else {
+    document.getElementById("lastNameErrorMsg").innerText =
+      "⚠️ Please enter a valid last name using 3-10 characters";
     return false;
   }
 }
 
 function validateAddress() {
-
   let address = document.getElementById("address").value;
 
   if (regExAddress.test(address)) {
-    document.getElementById("addressErrorMsg").innerText = "✅ Address is valid!";
+    document.getElementById("addressErrorMsg").innerText =
+      "✅ Address is valid!";
     return true;
-  }
-  else {
-    document.getElementById("addressErrorMsg").innerText = "⚠️ Format E.g.: 01 xxxxxxxx 12345";
+  } else {
+    document.getElementById("addressErrorMsg").innerText =
+      "⚠️ Format E.g.: 01 xxxxxxxx 12345";
     return false;
   }
 }
 
 function validateCity() {
-
   let city = document.getElementById("city").value;
 
   if (regExText.test(city)) {
-    document.getElementById("cityErrorMsg").innerText = "✅ City name is valid!";
+    document.getElementById("cityErrorMsg").innerText =
+      "✅ City name is valid!";
     return true;
-  }
-  else {
-    document.getElementById("cityErrorMsg").innerText = "⚠️ Please enter a valid city name!";
+  } else {
+    document.getElementById("cityErrorMsg").innerText =
+      "⚠️ Please enter a valid city name!";
     return false;
   }
 }
 
 function validateEmail() {
-
   let email = document.getElementById("email").value;
 
   if (regExEmail.test(email)) {
-    document.getElementById("emailErrorMsg").innerText = "✅ Email address is valid!";
+    document.getElementById("emailErrorMsg").innerText =
+      "✅ Email address is valid!";
     return true;
   } else {
-    document.getElementById("emailErrorMsg").innerText = "⚠️ Please enter a valid email address!";
+    document.getElementById("emailErrorMsg").innerText =
+      "⚠️ Please enter a valid email address!";
     return false;
   }
 }
 
-var formSubmitButton = document.querySelector('.cart__order__form');
+var formSubmitButton = document.querySelector(".cart__order__form");
 
-formSubmitButton.addEventListener('change', function () {
+formSubmitButton.addEventListener("change", function () {
   validateFirstName(firstName);
   validatelastName(lastName);
   validateAddress(address);
@@ -264,47 +269,48 @@ formSubmitButton.addEventListener('change', function () {
   validateEmail(email);
 });
 
-
-const formButton = document.getElementById('order');
+const formButton = document.getElementById("order");
 console.log(formButton);
 
-formButton.addEventListener('click', event => {
+formButton.addEventListener("click", (event) => {
   event.preventDefault();
 
   // put the form values in an object
   // put the values of the form and the selected products in an object to send to the server
 
   var contact = {
-    firstName: document.getElementById('firstName').value,
-    lastName: document.getElementById('lastName').value,
-    address: document.getElementById('address').value,
-    city: document.getElementById('city').value,
-    email: document.getElementById('email').value,
-  }
+    firstName: document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    address: document.getElementById("address").value,
+    city: document.getElementById("city").value,
+    email: document.getElementById("email").value,
+  };
 
-  if (firstName.value.length == 0 ||
+  if (
+    firstName.value.length == 0 ||
     lastName.value.length == 0 ||
     address.value.length == 0 ||
     city.value.length == 0 ||
-    email.value.length == 0) {
+    email.value.length == 0
+  ) {
     alert("⚠️ Please fill the form!");
-
-  } else if (regExEmail.test(email.value) == false || regExAddress.test(address.value) == false || regExText.test(city.value) == false || regExText.test(firstName.value) == false || regExText.test(lastName.value) == false) {
+  } else if (
+    regExEmail.test(email.value) == false ||
+    regExAddress.test(address.value) == false ||
+    regExText.test(city.value) == false ||
+    regExText.test(firstName.value) == false ||
+    regExText.test(lastName.value) == false
+  ) {
     alert("⚠️ Please provide valid values on the form!");
-
-  }
-  else if (productLocalStorage == null || productLocalStorage == 0) {
-    alert('⚠️ Please choose a product!')
-  }
-  else {
-
-    localStorage.setItem('contact', JSON.stringify(contact));
+  } else if (productLocalStorage == null || productLocalStorage == 0) {
+    alert("⚠️ Please choose a product!");
+  } else {
+    localStorage.setItem("contact", JSON.stringify(contact));
 
     let products = []; // see id of selected product
 
-    productLocalStorage.forEach(productSelected => {
+    productLocalStorage.forEach((productSelected) => {
       products.push(productSelected.productId);
-
     });
 
     console.log(products);
@@ -312,20 +318,20 @@ formButton.addEventListener('click', event => {
 
     let userInfo = {
       contact, // object type
-      products,  // object type
-    }
+      products, // object type
+    };
 
     console.log(userInfo);
     console.log(typeof contact); // object
 
-    let urlOrder = "https://gulcancprojectkanap.herokuapp.com/api/products/order"
+    let urlOrder = "https://p5-back.onrender.com/api/products/order";
 
     fetch(urlOrder, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(userInfo),
       headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json"
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     })
       .then(function (response) {
@@ -334,20 +340,14 @@ formButton.addEventListener('click', event => {
         }
       })
       .then(function (info) {
-
         console.log(info);
 
         location.href = `confirmation.html?id=${info.orderId}`;
 
         console.log(`confirmation.html?id=${info.orderId}`);
-
       })
       .catch(function (error) {
         alert("⚠️ Post error!");
-
       });
-
   }
-
 });
-
