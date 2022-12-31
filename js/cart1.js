@@ -1,4 +1,4 @@
-////////////////////////////////
+//////////////////////////////////////
 
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 console.log(productLocalStorage);
@@ -19,7 +19,7 @@ if (productLocalStorage) {
         article.setAttribute("data-id", product.productId);
         article.setAttribute("class", "cart__item");
         document.getElementById("cart__items").appendChild(article);
-        // You can use this instead of "setAttribute" =>  article.className = "cart__item";
+        // You can use this method instead of "setAttribute" =>  article.className = "cart__item";
 
         // Create first "div" element for imageCreate inside "article"
         let imageDiv = document.createElement("div");
@@ -99,7 +99,11 @@ if (productLocalStorage) {
         pDelete.setAttribute("class", "deleteItem");
         pDelete.innerText = "Supprimer";
 
-        pDelete.addEventListener("click", function () {
+        // pDelete.addEventListener('click', function () {
+
+        pDelete.addEventListener("click", () => {
+          // remove 1 element at index i, if you write 2 it will delete 2 elements, fonciton flech
+
           productLocalStorage.splice(index, 1);
 
           // send the new data to the localStorage
@@ -110,96 +114,72 @@ if (productLocalStorage) {
 
           // message after deleted item and refresh the page
 
-          alert("⚠️ The selected product was deleted from your cart!");
+          alert("⚠️ The selected product will be deleted from your cart!");
 
           window.location.reload();
         });
 
-        // FUNCTION CHANGE QUANTITY
+        // Modify quantity
 
-        function changeQuantity() {
-          // See each click input
+        productQuantity.addEventListener("change", function (event) {
+          event.stopPropagation();
 
-          // let changeQuantity = document.getElementsByClassName("itemQuantity");
+          console.log(typeof productQuantity.value);
+          console.log(typeof Number(productQuantity.value));
 
-          let changeQuantity = document.querySelectorAll(".itemQuantity");
-          console.log(changeQuantity);
+          let updatedQuantity = Number(productQuantity.value);
 
-          for (let i = 0; i < changeQuantity.length; i++) {
-            changeQuantity[i].addEventListener("change", (event) => {
-              // event.preventDefault();
-
-              event.stopPropagation();
-
-              // Choose un product according to its color and id
-
-              let updatedQuantity = Number(productQuantity.value);
-
-              if (updatedQuantity <= 0) {
-                alert("⚠️ You can NOT enter 0 and negatif values!");
-                window.location.reload();
-              } else if (updatedQuantity > 100) {
-                alert("⚠️ You can NOT enter a value greater than 100!");
-                window.location.reload();
-              } else if (updatedQuantity >= 1 && updatedQuantity <= 100) {
-                var findProduct = productLocalStorage.find(
-                  (el) => el.productId == productLocalStorage[i].productId
-                );
-
-                findProduct.productQuantity = changeQuantity[i].valueAsNumber;
-
-                productLocalStorage[i].productQuantity =
-                  findProduct.productQuantity;
-
-                localStorage.setItem(
-                  "product",
-                  JSON.stringify(productLocalStorage)
-                );
-              }
-
-              window.location.reload();
-            });
+          if (updatedQuantity <= 0) {
+            alert("⚠️ You can NOT enter 0 and negatif values!");
+            window.location.reload();
+          } else if (updatedQuantity > 100) {
+            alert("⚠️ You can NOT enter a value greater than 100!");
+            window.location.reload();
+          } else if (updatedQuantity >= 1 && updatedQuantity <= 100) {
+            productLocalStorage[index].productQuantity = updatedQuantity;
+            localStorage.setItem(
+              "product",
+              JSON.stringify(productLocalStorage)
+            );
+            totalPrice();
           }
-        }
-
-        changeQuantity();
+          window.location.reload();
+        });
 
         // FUNCTION TOTAL PRICE
+        var changeQuantity = document.querySelectorAll(".itemQuantity");
 
         function totalPrice() {
-          // Determine total quantity
+          // Determine total quantity and total price
 
-          let productsQuantities = document.querySelectorAll(".itemQuantity");
-          // let productsQuantities = document.getElementsByClassName('itemQuantity');
-          console.log(productsQuantities);
-          let myCart = productsQuantities.length,
-            totalQuantity = 0;
-          console.log(myCart);
+          let totalQuantity = 0;
+          let displayTotalPrice = 0;
 
-          for (var i = 0; i < myCart; ++i) {
-            totalQuantity += productsQuantities[i].valueAsNumber;
-          }
+          changeQuantity.forEach((element) => {
+            totalQuantity += Number(changeQuantity[index].value);
+            displayTotalPrice += Number(
+              changeQuantity[index].value * products.price
+            );
+          });
 
           let productTotalQuantity = document.getElementById("totalQuantity");
           productTotalQuantity.innerText = totalQuantity;
 
-          // Calculate total price
-          displayTotalPrice = 0;
-
-          for (var i = 0; i < myCart; ++i) {
-            displayTotalPrice +=
-              productsQuantities[i].valueAsNumber * products.price;
-          }
-
           let showTotalPrice = document.getElementById("totalPrice");
           showTotalPrice.innerText = displayTotalPrice;
+
+          /*  for (let i = 0; i < changeQuantity.length; ++i) {
+            totalQuantity += Number(changeQuantity[i].value);
+          } */
+
+          /*   for (let i = 0; i < changeQuantity.length; ++i) {
+           displayTotalPrice += Number((changeQuantity[i].value * products.price));
+         } */
         }
         totalPrice();
       });
   });
 }
-
-// FORM
 
 // FORM
 var regExText = /^[a-zA-Z\s\'\-]{3,10}$/; // use regExText for three values; firstName, lastName and city
@@ -373,5 +353,3 @@ formButton.addEventListener("click", (event) => {
       });
   }
 });
-
-////////////////////////////////

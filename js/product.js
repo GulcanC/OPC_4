@@ -97,7 +97,7 @@ function addProductToCart(product) {
       alert("⚠️ Please choose a color!");
       window.location.reload();
     } else if (quantity.value == 0 || quantity.value == null) {
-      alert("⚠️ Please choose the quantity between 0 and 101!");
+      alert("⚠️ Please choose the quantity enter 0 and 101!");
       window.location.reload();
     } else if (quantity.value < 0) {
       alert("⚠️ You can NOT choose a negative value!");
@@ -130,13 +130,13 @@ function addProductToCart(product) {
         console.log(filterProduct);
 
         if (filterProduct >= 0) {
-          newQuantity =
+          quantity =
             Number(productProperties.productQuantity) +
             Number(productLocalStorage[filterProduct].productQuantity);
 
           if (productLocalStorage[filterProduct].productQuantity == 100) {
             alert(
-              `⚠️ You have already added "${productLocalStorage[filterProduct].productQuantity}" products for the product "${product.name}", thus you can NOT add more product!`
+              `✅ You already chosed "${productLocalStorage[filterProduct].productQuantity}" product for the product "${product.name}", thus you can NOT choose more product!`
             );
             window.location.reload();
           } else if (
@@ -145,17 +145,17 @@ function addProductToCart(product) {
             100
           ) {
             alert(
-              `⚠️ You have already added "${
+              `✅ You have already added "${
                 productLocalStorage[filterProduct].productQuantity
-              }" product(s) for the product "${
+              }" products for the product "${
                 product.name
               }", thus you can add maximum "${
                 100 - productLocalStorage[filterProduct].productQuantity
               }" from the same product!`
             );
             window.location.reload();
-          } else if (newQuantity <= 100) {
-            productLocalStorage[filterProduct].productQuantity = newQuantity;
+          } else if (quantity <= 100) {
+            productLocalStorage[filterProduct].productQuantity = quantity;
             localStorage.setItem(
               "product",
               JSON.stringify(productLocalStorage)
@@ -175,7 +175,3 @@ function addProductToCart(product) {
     }
   });
 }
-
-// Go to all the products and search for the product id and color. If a product id and color matches with my product filter method will return that product
-// and it will be stored in the filterProduct variable, I will add this product to the cart
-// You can use an alternative way for "location.assign()" => window.location.href = "cart.html";
